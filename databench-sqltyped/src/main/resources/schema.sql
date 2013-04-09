@@ -1,0 +1,9 @@
+DROP SCHEMA IF EXISTS databench CASCADE;
+CREATE SCHEMA databench AUTHORIZATION postgres;
+
+create table SQLTYPED_ACCOUNT(
+  ID int NOT NULL,
+  TRANSFERS varchar NOT NULL, 
+  BALANCE int NOT NULL, 
+  PRIMARY KEY (id)
+);
