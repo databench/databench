@@ -60,6 +60,27 @@ object DatabenchBuild extends Build {
 		    )
 		)
 
+	val sqltyped = "fi.reaktor" %% "sqltyped" % "0.2.1"
+
+	lazy val databenchSqltyped = 
+		Project(
+			id = "databench-sqltyped",
+			base = file("databench-sqltyped"),
+			dependencies = Seq(databenchBank),
+			settings = commonSettings ++ Seq(
+		      libraryDependencies ++= 
+		    	  Seq(sqltyped, slick, boneCP),
+                          initialize ~= { _ => initSqltyped }
+		    )
+		)
+
+        def initSqltyped {
+          System.setProperty("sqltyped.url", "jdbc:postgresql://localhost/databench")
+          System.setProperty("sqltyped.driver", "org.postgresql.Driver")
+          System.setProperty("sqltyped.username", "postgres")
+          System.setProperty("sqltyped.password", "postgres")
+        }
+
 	val prevaylerCore = "org.prevayler" % "prevayler-core" % "2.6"
 	val prevaylerFactory = "org.prevayler" % "prevayler-factory" % "2.6"
 	val prevaylerXStream = "org.prevayler.extras" % "prevayler-xstream" % "2.6"
@@ -145,7 +166,7 @@ object DatabenchBuild extends Build {
 			base = file("databench-runner"),
 			dependencies = Seq(databenchBank, databenchActivate,
 		    			databenchSlick, databenchPrevayler, databenchJpa,
-		    			databenchSqueryl, databenchDb4o, databenchEbean),
+		    			databenchSqueryl, databenchDb4o, databenchEbean, databenchSqltyped),
 			settings = commonSettings ++ assemblySettings ++ Seq(
 					libraryDependencies ++= Seq(
 						reflections, gfork, scalaTest, mysql, 
