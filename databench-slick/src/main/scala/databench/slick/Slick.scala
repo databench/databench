@@ -82,7 +82,7 @@ class SlickPostgreSubject extends Bank[JInt] {
 
     private def updateAccount(id: Int, balance: Int, transfers: String) = {
         val query =
-            for (account <- Accounts if (account.id === id))
+            for (account <- Accounts if (account.id === id.bind))
                 yield account.balance ~ account.transfers
         query.update(balance, transfers)
     }
