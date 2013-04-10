@@ -39,7 +39,6 @@ case class ForkTask[R](fork: Fork[FunctionTask[R], Nothing]) {
                 .map(_.get(fork).asInstanceOf[File])
                 .filter(_ != null)
                 .filter(_.isFile)
-        println(files.map(_.getName))
         files.foreach(_.delete)
     }
 }
