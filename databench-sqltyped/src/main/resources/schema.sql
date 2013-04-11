@@ -1,5 +1,7 @@
-DROP SCHEMA IF EXISTS databench CASCADE;
-CREATE SCHEMA databench AUTHORIZATION postgres;
+DROP SCHEMA IF EXISTS databenchdev CASCADE;
+CREATE SCHEMA databenchdev AUTHORIZATION postgres;
+SET search_path TO databenchdev;
+ALTER USER postgres SET search_path to databenchdev,public;
 
 create table SQLTYPED_ACCOUNT(
   ID int NOT NULL,
