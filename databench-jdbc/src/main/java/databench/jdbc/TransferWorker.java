@@ -25,25 +25,19 @@ class TransferWorker {
 	private void performOrderedUpdatesToAvoidDeadLock(int from, int to,
 			int value) throws SQLException {
 		if (from < to) {
-			addFromUpdateBatch(from, value);
-			addToUpdateBatch(to, value);
+			addUpdateBatch(from, -value);
+			addUpdateBatch(to, value);
 		} else {
-			addToUpdateBatch(to, value);
-			addFromUpdateBatch(from, value);
+			addUpdateBatch(to, value);
+			addUpdateBatch(from, -value);
 		}
 	}
 
-	private void addToUpdateBatch(int to, int value) throws SQLException {
+	private void addUpdateBatch(int id, int value) throws SQLException {
 		updateAccountPreparedStatement.setInt(1, value);
 		updateAccountPreparedStatement.setInt(2, value);
-		updateAccountPreparedStatement.setInt(3, to);
+		updateAccountPreparedStatement.setInt(3, id);
 		updateAccountPreparedStatement.addBatch();
 	}
 
-	private void addFromUpdateBatch(int from, int value) throws SQLException {
-		updateAccountPreparedStatement.setInt(1, -value);
-		updateAccountPreparedStatement.setInt(2, -value);
-		updateAccountPreparedStatement.setInt(3, from);
-		updateAccountPreparedStatement.addBatch();
-	}
 }
