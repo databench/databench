@@ -18,14 +18,32 @@ class TransferWorker {
 	}
 
 	public void transfer(int from, int to, int value) throws SQLException {
-		updateAccountPreparedStatement.setInt(1, -value);
-		updateAccountPreparedStatement.setInt(2, -value);
-		updateAccountPreparedStatement.setInt(3, from);
-		updateAccountPreparedStatement.addBatch();
+		performOrderedUpdatesToAvoidDeadLock(from, to, value);
+		updateAccountPreparedStatement.executeBatch();
+	}
+
+	private void performOrderedUpdatesToAvoidDeadLock(int from, int to,
+			int value) throws SQLException {
+		if (from < to) {
+			addFromUpdateBatch(from, value);
+			addToUpdateBatch(to, value);
+		} else {
+			addToUpdateBatch(to, value);
+			addFromUpdateBatch(from, value);
+		}
+	}
+
+	private void addToUpdateBatch(int to, int value) throws SQLException {
 		updateAccountPreparedStatement.setInt(1, value);
 		updateAccountPreparedStatement.setInt(2, value);
 		updateAccountPreparedStatement.setInt(3, to);
 		updateAccountPreparedStatement.addBatch();
-		updateAccountPreparedStatement.executeBatch();
+	}
+
+	private void addFromUpdateBatch(int from, int value) throws SQLException {
+		updateAccountPreparedStatement.setInt(1, -value);
+		updateAccountPreparedStatement.setInt(2, -value);
+		updateAccountPreparedStatement.setInt(3, from);
+		updateAccountPreparedStatement.addBatch();
 	}
 }

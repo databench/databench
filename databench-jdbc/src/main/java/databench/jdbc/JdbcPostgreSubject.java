@@ -29,17 +29,7 @@ public class JdbcPostgreSubject implements Bank<Integer> {
 
 	public JdbcPostgreSubject() throws SQLException {
 		PostgreSqlDatabase.loadDriver();
-		BoneCPConfig config = getBoneCPConfig();
-		boneCP = new BoneCP(config);
-	}
-
-	private BoneCPConfig getBoneCPConfig() {
-		BoneCPConfig config = new BoneCPConfig();
-		config.setJdbcUrl(PostgreSqlDatabase.url());
-		config.setUsername(PostgreSqlDatabase.user());
-		config.setPassword(PostgreSqlDatabase.password());
-		config.setDefaultAutoCommit(true);
-		return config;
+		boneCP = new BoneCP(getBoneCPConfig());
 	}
 
 	@Override
@@ -112,6 +102,15 @@ public class JdbcPostgreSubject implements Bank<Integer> {
 		stmt.executeUpdate("CREATE TABLE IF NOT EXISTS JDBCACCOUNT ("
 				+ "    ID INTEGER PRIMARY KEY, BALANCE INTEGER, "
 				+ "    TRANSFERS VARCHAR )");
+	}
+
+	private BoneCPConfig getBoneCPConfig() {
+		BoneCPConfig config = new BoneCPConfig();
+		config.setJdbcUrl(PostgreSqlDatabase.url());
+		config.setUsername(PostgreSqlDatabase.user());
+		config.setPassword(PostgreSqlDatabase.password());
+		config.setDefaultAutoCommit(true);
+		return config;
 	}
 
 	private ConnectionHandle getConnection() {
