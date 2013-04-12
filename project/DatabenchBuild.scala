@@ -153,6 +153,17 @@ object DatabenchBuild extends Build {
 		    )
 		)
 
+	lazy val databenchJdbc = 
+		Project(
+			id = "databench-jdbc",
+			base = file("databench-jdbc"),
+			dependencies = Seq(databenchBank),
+			settings = commonSettings ++ Seq(
+		      libraryDependencies ++= 
+		    	  Seq(postgresql, boneCP)
+		    )
+		)
+
 	val reflections = "org.reflections" % "reflections" % "0.9.8" exclude("javassist", "javassist") exclude("dom4j", "dom4j")
 	val gfork = "org.gfork" % "gfork" % "0.11"
 	val scalaTest = "org.scalatest" %% "scalatest" % "2.0.M5b" % "test"
@@ -166,7 +177,8 @@ object DatabenchBuild extends Build {
 			base = file("databench-runner"),
 			dependencies = Seq(databenchBank, databenchActivate,
 		    			databenchSlick, databenchPrevayler, databenchJpa,
-		    			databenchSqueryl, databenchDb4o, databenchEbean, databenchSqltyped),
+		    			databenchSqueryl, databenchDb4o, databenchEbean, 
+		    			databenchSqltyped, databenchJdbc),
 			settings = commonSettings ++ assemblySettings ++ Seq(
 					libraryDependencies ++= Seq(
 						reflections, gfork, scalaTest, mysql, 
