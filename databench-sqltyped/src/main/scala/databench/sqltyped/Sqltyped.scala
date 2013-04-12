@@ -24,13 +24,14 @@ class SqltypedPostgreSubject extends Bank[JInt] {
         config.setJdbcUrl(url)
         config.setUsername(user)
         config.setPassword(password)
+        config.setDefaultAutoCommit(true)
         new BoneCPDataSource(config)
     }
 
-    object Tables { trait SQLTYPED_ACCOUNT }
+    object Tables {}
     object Columns {}
 
-    private val database = Database.forDataSource(dataSource)
+    private val db = Database.forDataSource(dataSource)
     implicit val config = Configuration(Tables, Columns)
     implicit def conn = Database.threadLocalSession.conn
 
@@ -49,27 +50,27 @@ class SqltypedPostgreSubject extends Bank[JInt] {
 
     override def additionalVMParameters(forMultipleVMs: Boolean) = ""
 
-    def transfer(from: JInt, to: JInt, value: Int) = withTransaction {
+    def transfer(from: JInt, to: JInt, value: Int) = db.withTransaction {
         def updateFrom = updateAccount(-value, (-value).toString, from)
         def updateTo = updateAccount(value, value.toString, to)
         executeOrderedUpdatesToAvoidDeadlock(from, to, updateFrom, updateTo)
     }
 
-    def getAccountStatus(id: JInt) = withTransaction {
+    def getAccountStatus(id: JInt) = db.withSession {
         accountById(id).map(_.values.tupled).map {
             case (balance, transfers) =>
                 new AccountStatus(balance, transfers.split(',').tail.map(Integer.parseInt(_).intValue))
         }.head
     }
 
-    private def insertAccounts(numberOfAccounts: Integer) = withTransaction {
+    private def insertAccounts(numberOfAccounts: Integer) = db.withTransaction {
         for (i <- (0 until numberOfAccounts)) yield {
             newAccount(i, 0, " ")
             i
         }
     }
 
-    private def createSchema = withTransaction {
+    private def createSchema = db.withTransaction {
         val stmt = conn.createStatement
         stmt.executeUpdate(""" CREATE SCHEMA databench AUTHORIZATION postgres """)
         stmt.executeUpdate("""
@@ -94,6 +95,4 @@ class SqltypedPostgreSubject extends Bank[JInt] {
             updateToAccount
             updateFromAccount
         }
-
-    private def withTransaction[R](f: => R): R = database.withTransaction(f)
 }
