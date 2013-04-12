@@ -75,7 +75,7 @@ object DatabenchBuild extends Build {
 		)
 
         def initSqltyped {
-          System.setProperty("sqltyped.url", "jdbc:postgresql://localhost/databench")
+          System.setProperty("sqltyped.url", "jdbc:postgresql://localhost/databenchdev")
           System.setProperty("sqltyped.driver", "org.postgresql.Driver")
           System.setProperty("sqltyped.username", "postgres")
           System.setProperty("sqltyped.password", "postgres")
