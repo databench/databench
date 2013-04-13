@@ -31,8 +31,9 @@ object DatabenchBuild extends Build {
 	val activateVersion = "1.3-RC1"
 	val activateCore = "net.fwbrasil" %% "activate-core" % activateVersion
 	val activatePrevayler = "net.fwbrasil" %% "activate-prevayler" % activateVersion exclude("xpp3", "xpp3_min")
-	val activateJdbc = "net.fwbrasil" %% "activate-jdbc" % activateVersion
+	val activateJdbc = "net.fwbrasil" %% "activate-jdbc" % activateVersion exclude("com.jolbox", "bonecp")
 	val activateMongo = "net.fwbrasil" %% "activate-mongo" % activateVersion
+	val boneCP = "com.jolbox" % "bonecp" % "0.7.1.RELEASE"
 
  	lazy val databenchActivate = 
 		Project(
@@ -42,12 +43,11 @@ object DatabenchBuild extends Build {
 			settings = commonSettings ++ Seq(
 		      libraryDependencies ++= 
 		    	  Seq(activateCore, activatePrevayler, 
-		    	  	activateJdbc, activateMongo)
+		    	  	activateJdbc, activateMongo, boneCP)
 		    )
 		)
 
 	val slick = "com.typesafe.slick" %% "slick" % "1.0.0"
-	val boneCP = "com.jolbox" % "bonecp" % "0.8.0-alpha1"
 
 	lazy val databenchSlick = 
 		Project(
@@ -98,7 +98,7 @@ object DatabenchBuild extends Build {
 		)
 
 	val hibernateEntityManager = "org.hibernate" % "hibernate-entitymanager" % "4.1.2"
-	val boneCPProvider = "com.jolbox" % "bonecp-provider" % "0.8.0-alpha1"
+	val boneCPProvider = "com.jolbox" % "bonecp-provider" % "0.7.1.RELEASE"
 	val eclipselink = "org.eclipse.persistence" % "eclipselink" % "2.4.0"
 	val batoo = "org.batoo.jpa" % "batoo-jpa" % "2.0.1.0-RTM"
 	val validation = "javax.validation" % "validation-api" % "1.0.0.GA"
