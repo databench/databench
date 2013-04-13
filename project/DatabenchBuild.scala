@@ -33,6 +33,7 @@ object DatabenchBuild extends Build {
 	val activatePrevayler = "net.fwbrasil" %% "activate-prevayler" % activateVersion exclude("xpp3", "xpp3_min")
 	val activateJdbc = "net.fwbrasil" %% "activate-jdbc" % activateVersion exclude("com.jolbox", "bonecp")
 	val activateMongo = "net.fwbrasil" %% "activate-mongo" % activateVersion
+	val boneCP = "com.jolbox" % "bonecp" % "0.7.1.RELEASE"
 
  	lazy val databenchActivate = 
 		Project(
@@ -42,12 +43,11 @@ object DatabenchBuild extends Build {
 			settings = commonSettings ++ Seq(
 		      libraryDependencies ++= 
 		    	  Seq(activateCore, activatePrevayler, 
-		    	  	activateJdbc, activateMongo)
+		    	  	activateJdbc, activateMongo, boneCP)
 		    )
 		)
 
 	val slick = "com.typesafe.slick" %% "slick" % "1.0.0"
-	val boneCP = "com.jolbox" % "bonecp" % "0.7.1.RELEASE"
 
 	lazy val databenchSlick = 
 		Project(
