@@ -108,7 +108,7 @@ public class ChronicleSubject implements Bank<Integer>, SingleVMBank {
     }
 
     @Override
-    public synchronized AccountStatus getAccountStatus(Integer id) {
+    public AccountStatus getAccountStatus(Integer id) {
         return accounts.get(id).getAccountStatus();
     }
 

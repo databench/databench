@@ -9,7 +9,7 @@ import gnu.trove.list.array.TIntArrayList;
 public class ChronicleAccount {
     private int balance = 0;
     private final TIntArrayList transferValues = new TIntArrayList();
-    private AccountStatus accountStatus = null;
+    private volatile AccountStatus accountStatus = null;
 
     public int getBalance() {
         return balance;
