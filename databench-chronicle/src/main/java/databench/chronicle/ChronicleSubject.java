@@ -14,19 +14,22 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import static org.junit.Assert.assertEquals;
-
 /**
  * @author peter.lawrey
  */
 public class ChronicleSubject implements Bank<Integer>, SingleVMBank {
+    private static boolean s_warmup = false;
     private static final String TMP = System.getProperty("java.io.tmpdir");
     private final List<ChronicleAccount> accounts = new ArrayList<ChronicleAccount>();
     private final IndexedChronicle chronicle;
     private final Excerpt excerpt;
 
     public ChronicleSubject() throws IOException {
-        String basePath = TMP + "/chronicle-subject";
+        this("subject");
+    }
+
+    public ChronicleSubject(String name) throws IOException {
+        String basePath = TMP + "/chronicle-" + name;
         ChronicleTools.deleteOnExit(basePath);
         chronicle = new IndexedChronicle(basePath);
         chronicle.useUnsafe(true);
@@ -45,10 +48,16 @@ public class ChronicleSubject implements Bank<Integer>, SingleVMBank {
 
     @Override
     public void warmUp() {
+        warmUp0();
+    }
+
+    private static void warmUp0() {
+        if (s_warmup) return;
+        s_warmup = true;
         try {
             int transactions = 20000;
             Random rand = new Random();
-            ChronicleSubject subject = new ChronicleSubject();
+            ChronicleSubject subject = new ChronicleSubject("warmup");
 
             long start = System.nanoTime();
             Integer[] ids = subject.setUp(500);
@@ -65,11 +74,11 @@ public class ChronicleSubject implements Bank<Integer>, SingleVMBank {
                 for (int amount : accountStatus.transferredAmounts)
                     countAmounts.adjustOrPutValue(amount, 1, 1);
             }
-            assertEquals(transactions, countAmounts.size());
+            assert transactions == countAmounts.size();
             countAmounts.forEachValue(new TIntProcedure() {
                 @Override
                 public boolean execute(int count) {
-                    assertEquals(2, count);
+                    assert 2 == count;
                     return true;
                 }
             });
@@ -89,7 +98,7 @@ public class ChronicleSubject implements Bank<Integer>, SingleVMBank {
     @Override
     public synchronized void transfer(Integer from, Integer to, int amount) {
         accounts.get(from).transfer(-amount);
-        accounts.get(to).transfer(-amount);
+        accounts.get(to).transfer(amount);
 
         excerpt.startExcerpt(12);
         excerpt.writeInt(from);
@@ -99,7 +108,7 @@ public class ChronicleSubject implements Bank<Integer>, SingleVMBank {
     }
 
     @Override
-    public AccountStatus getAccountStatus(Integer id) {
+    public synchronized AccountStatus getAccountStatus(Integer id) {
         return accounts.get(id).getAccountStatus();
     }
 

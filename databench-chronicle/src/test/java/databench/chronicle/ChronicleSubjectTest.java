@@ -32,8 +32,12 @@ public class ChronicleSubjectTest {
         TIntIntHashMap countAmounts = new TIntIntHashMap();
         for (Integer id : ids) {
             AccountStatus accountStatus = subject.getAccountStatus(id);
-            for (int amount : accountStatus.transferredAmounts)
+            int sum = 0;
+            for (int amount : accountStatus.transferredAmounts) {
                 countAmounts.adjustOrPutValue(amount, 1, 1);
+                sum += amount;
+            }
+            assertEquals(accountStatus.balance, sum);
         }
         assertEquals(transactions, countAmounts.size());
         countAmounts.forEachValue(new TIntProcedure() {
