@@ -97,6 +97,20 @@ object DatabenchBuild extends Build {
 		    )
 		)
 
+  val chronicleCore = "com.higherfrequencytrading" % "chronicle" % "1.7"
+  val trove4j = "net.sf.trove4j" % "trove4j" % "3.0.3"
+
+  lazy val databenchChronicle =
+    Project(
+      id = "databench-chronicle",
+      base = file("databench-chronicle"),
+      dependencies = Seq(databenchBank),
+      settings = commonSettings ++ Seq(
+        libraryDependencies ++=
+          Seq(chronicleCore, trove4j)
+      )
+    )
+
 	val hibernateEntityManager = "org.hibernate" % "hibernate-entitymanager" % "4.1.2"
 	val boneCPProvider = "com.jolbox" % "bonecp-provider" % "0.8.0-alpha1"
 	val eclipselink = "org.eclipse.persistence" % "eclipselink" % "2.4.0"
@@ -178,7 +192,7 @@ object DatabenchBuild extends Build {
 			dependencies = Seq(databenchBank, databenchActivate,
 		    			databenchSlick, databenchPrevayler, databenchJpa,
 		    			databenchSqueryl, databenchDb4o, databenchEbean, 
-		    			databenchSqltyped, databenchJdbc),
+		    			databenchSqltyped, databenchJdbc, databenchChronicle),
 			settings = commonSettings ++ assemblySettings ++ Seq(
 					libraryDependencies ++= Seq(
 						reflections, gfork, scalaTest, mysql, 
