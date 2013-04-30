@@ -7,13 +7,16 @@ sudo apt-get -y install git
 wget http://scalasbt.artifactoryonline.com/scalasbt/sbt-native-packages/org/scala-sbt/sbt//0.12.3/sbt.deb
 sudo dpkg -i sbt.deb
 
+git clone git://github.com/databench/databench.git
+cd databench
+
 sudo passwd postgres
 su postgres
 psql -c "ALTER USER postgres WITH PASSWORD 'postgres'" -d template1
+createdb -O postgres databenchdev
+psql databenchdev < databench-sqltyped/src/main/resources/schema.sql
 exit
 
-git clone git://github.com/databench/databench.git
-cd databench
 sbt assembly
 
 
