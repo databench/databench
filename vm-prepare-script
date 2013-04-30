@@ -11,11 +11,15 @@ git clone git://github.com/databench/databench.git
 cd databench
 
 sudo passwd postgres
-su postgres
-psql -c "ALTER USER postgres WITH PASSWORD 'postgres'" -d template1
-createdb -O postgres databenchdev
-psql databenchdev < databench-sqltyped/src/main/resources/schema.sql
-exit
+
+sudo -c postgres psql -c "ALTER USER postgres WITH PASSWORD 'postgres'" -d template1
+sudo -u postgres createdb -O postgres databenchdev
+
+git clone git://github.com/databench/databench.git
+
+sudo -u postgres psql databenchdev < databench/databench-sqltyped/src/main/resources/schema.sql
+
+cd databench
 
 sbt assembly
 
