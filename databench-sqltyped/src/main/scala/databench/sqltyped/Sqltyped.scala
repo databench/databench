@@ -3,16 +3,10 @@ package databench.sqltyped
 import databench.Bank
 import java.lang.{ Integer => JInt }
 import databench.AccountStatus
-import java.sql.Connection
-import scala.annotation.tailrec
-import scala.util.Try
-import scala.util.Failure
-import scala.util.Success
 import sqltyped._
 import scala.slick.session.Database
 import databench.database.PostgreSqlDatabase
 import com.jolbox.bonecp.BoneCPConfig
-import com.jolbox.bonecp.BoneCP
 import com.jolbox.bonecp.BoneCPDataSource
 
 class SqltypedPostgreSubject extends Bank[JInt] {
@@ -25,6 +19,7 @@ class SqltypedPostgreSubject extends Bank[JInt] {
         config.setUsername(user)
         config.setPassword(password)
         config.setDefaultAutoCommit(true)
+        config.setStatementsCacheSize(10)
         new BoneCPDataSource(config)
     }
 
@@ -74,7 +69,7 @@ class SqltypedPostgreSubject extends Bank[JInt] {
         val stmt = conn.createStatement
         stmt.executeUpdate(""" CREATE SCHEMA databench AUTHORIZATION postgres """)
         stmt.executeUpdate("""
-      create table SQLTYPED_ACCOUNT(
+      CREATE TABLE SQLTYPED_ACCOUNT(
         ID int NOT NULL,
         TRANSFERS varchar NOT NULL, 
         BALANCE int NOT NULL, 
