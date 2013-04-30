@@ -18,7 +18,7 @@
             <property name="hibernate.show_sql" value="false"/>
             <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
             <property name="hibernate.connection.autocommit" value="false"/>
-            <property name="hibernate.connection.provider_class" value="com.jolbox.bonecp.provider.BoneCPConnectionProvider"/>
+            <property name="hibernate.connection.datasource" value="PostgreDS"/>
         </properties>
     </persistence-unit>
     <persistence-unit name="databench.jpa.eclipselink">

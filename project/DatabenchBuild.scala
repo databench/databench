@@ -98,10 +98,10 @@ object DatabenchBuild extends Build {
 		)
 
 	val hibernateEntityManager = "org.hibernate" % "hibernate-entitymanager" % "4.1.2"
-	val boneCPProvider = "com.jolbox" % "bonecp-provider" % "0.7.1.RELEASE"
 	val eclipselink = "org.eclipse.persistence" % "eclipselink" % "2.4.0"
 	val batoo = "org.batoo.jpa" % "batoo-jpa" % "2.0.1.0-RTM"
 	val validation = "javax.validation" % "validation-api" % "1.0.0.GA"
+	val catalina = "org.apache.tomcat" % "catalina" % "6.0.14"
 	
 	lazy val databenchJpa = 
 		Project(
@@ -110,7 +110,7 @@ object DatabenchBuild extends Build {
 			dependencies = Seq(databenchBank),
 			settings = commonSettings ++ Seq(
 		      libraryDependencies ++= 
-		    	  Seq(hibernateEntityManager, boneCPProvider, eclipselink, batoo, validation)
+		    	  Seq(hibernateEntityManager, catalina, eclipselink, batoo, validation, boneCP)
 		    )
 		)
 

@@ -6,6 +6,7 @@ import com.mongodb.MongoClient
 import scala.reflect.io.Directory
 import java.io.File
 import java.sql.Connection
+import javax.naming.InitialContext
 
 trait Database {
     def recreate: Unit
