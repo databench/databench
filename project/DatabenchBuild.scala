@@ -11,7 +11,8 @@ object DatabenchBuild extends Build {
     		base = file("."),
     		aggregate = Seq(databenchBank, databenchActivate,
     			databenchSlick, databenchPrevayler, databenchJpa,
-    			databenchSqueryl, databenchDb4o, databenchRunner)
+    			databenchSqueryl, databenchDb4o, databenchRunner,
+    			databenchChronicle, databenchSorm, databenchMapperDao)
     	)
 
     val postgresql = "postgresql" % "postgresql" % "9.1-901.jdbc4"
@@ -28,11 +29,12 @@ object DatabenchBuild extends Build {
     	  	)
 		)
 
-	val activateVersion = "1.3-RC1"
+	val activateVersion = "1.4-SNAPSHOT"
 	val activateCore = "net.fwbrasil" %% "activate-core" % activateVersion
 	val activatePrevayler = "net.fwbrasil" %% "activate-prevayler" % activateVersion exclude("xpp3", "xpp3_min")
 	val activateJdbc = "net.fwbrasil" %% "activate-jdbc" % activateVersion exclude("com.jolbox", "bonecp")
 	val activateMongo = "net.fwbrasil" %% "activate-mongo" % activateVersion
+	val activatePrevalent = "net.fwbrasil" %% "activate-prevalent" % activateVersion
 	val boneCP = "com.jolbox" % "bonecp" % "0.7.1.RELEASE"
 
  	lazy val databenchActivate = 
@@ -42,7 +44,7 @@ object DatabenchBuild extends Build {
 			dependencies = Seq(databenchBank),
 			settings = commonSettings ++ Seq(
 		      libraryDependencies ++= 
-		    	  Seq(activateCore, activatePrevayler, 
+		    	  Seq(activateCore, activatePrevayler, activatePrevalent,
 		    	  	activateJdbc, activateMongo, boneCP)
 		    )
 		)
@@ -99,6 +101,7 @@ object DatabenchBuild extends Build {
 
   val chronicleCore = "com.higherfrequencytrading" % "chronicle" % "1.7"
   val trove4j = "net.sf.trove4j" % "trove4j" % "3.0.3"
+  val junit = "junit" % "junit" % "4.4" % "test"
 
   lazy val databenchChronicle =
     Project(
@@ -107,7 +110,7 @@ object DatabenchBuild extends Build {
       dependencies = Seq(databenchBank),
       settings = commonSettings ++ Seq(
         libraryDependencies ++=
-          Seq(chronicleCore, trove4j)
+          Seq(chronicleCore, trove4j, junit)
       )
     )
 
@@ -178,6 +181,33 @@ object DatabenchBuild extends Build {
 		    )
 		)
 
+	val sorm = "org.sorm-framework" % "sorm" % "0.3.8"
+
+	lazy val databenchSorm = 
+		Project(
+			id = "databench-sorm",
+			base = file("databench-sorm"),
+			dependencies = Seq(databenchBank),
+			settings = commonSettings ++ Seq(
+		      libraryDependencies ++= 
+		    	  Seq(sorm)
+		    )
+		)
+
+	val mapperDao = "com.googlecode.mapperdao" % "mapperdao" % "1.0.0.rc24-2.10.2"
+
+	lazy val databenchMapperDao =
+		Project(
+			id = "databench-mapperdao",
+			base = file("databench-mapperdao"),
+			dependencies = Seq(databenchBank),
+			settings = commonSettings ++ Seq(
+		      libraryDependencies ++= 
+		    	  Seq(mapperDao)
+		    )
+		)
+
+
 	val reflections = "org.reflections" % "reflections" % "0.9.8" exclude("javassist", "javassist") exclude("dom4j", "dom4j")
 	val gfork = "org.gfork" % "gfork" % "0.11"
 	val scalaTest = "org.scalatest" %% "scalatest" % "2.0.M5b" % "test"
@@ -190,9 +220,10 @@ object DatabenchBuild extends Build {
 			id = "databench-runner",
 			base = file("databench-runner"),
 			dependencies = Seq(databenchBank, databenchActivate,
-		    			databenchSlick, databenchPrevayler, databenchJpa,
-		    			databenchSqueryl, databenchDb4o, databenchEbean, 
-		    			databenchSqltyped, databenchJdbc, databenchChronicle),
+		    			/*databenchSlick,*/ databenchPrevayler, /*databenchJpa,*/
+		    			/*databenchSqueryl, databenchDb4o,*/ databenchEbean, 
+		    			/*databenchSqltyped,*/ databenchJdbc, databenchChronicle),
+		    			//databenchSorm, databenchMapperDao),
 			settings = commonSettings ++ assemblySettings ++ Seq(
 					libraryDependencies ++= Seq(
 						reflections, gfork, scalaTest, mysql, 

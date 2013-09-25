@@ -44,6 +44,7 @@ class TurnSummary(turn: Turn) extends Serializable {
             .mapValues(_.size)
 
     override lazy val toString = {
+            exceptions.foreach(_.printStackTrace)
         "\n******************************************" +
             s"\nBank $bankName" +
             s"\n	TPS: $tps" +

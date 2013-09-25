@@ -29,6 +29,7 @@ import net.fwbrasil.activate.storage.relational.JdbcStatementException
 import net.fwbrasil.activate.OptimisticOfflineLocking
 import net.fwbrasil.activate.migration.StorageVersion
 import databench.SingleVMBank
+import net.fwbrasil.activate.storage.prevalent.PrevalentStorage
 
 class ActivateAccount
         extends Entity {
@@ -124,6 +125,11 @@ class ActivateMongoSubject
 
 class ActivatePostgreSubject
         extends ActivateSubject {
+    
+    override def setUp(numberOfAccounts: Integer) = {
+        PostgreSqlDatabase.setDatabaseDefaultTransactionIsolation(java.sql.Connection.TRANSACTION_READ_UNCOMMITTED)
+        super.setUp(numberOfAccounts)
+    }
 
     val storage = new PooledJdbcRelationalStorage {
         val jdbcDriver = PostgreSqlDatabase.jdbcDriver
@@ -141,5 +147,13 @@ class ActivatePrevaylerSubject
 
     val storage =
         new PrevaylerStorage(
+            FolderDatabase.path + "/" + System.currentTimeMillis)
+}
+
+class ActivatePrevalentSubject
+        extends ActivateSubject with SingleVMBank {
+
+    val storage =
+        new PrevalentStorage(
             FolderDatabase.path + "/" + System.currentTimeMillis)
 }
