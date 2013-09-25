@@ -126,11 +126,6 @@ class ActivateMongoSubject
 class ActivatePostgreSubject
         extends ActivateSubject {
     
-    override def setUp(numberOfAccounts: Integer) = {
-        PostgreSqlDatabase.setDatabaseDefaultTransactionIsolation(java.sql.Connection.TRANSACTION_READ_UNCOMMITTED)
-        super.setUp(numberOfAccounts)
-    }
-
     val storage = new PooledJdbcRelationalStorage {
         val jdbcDriver = PostgreSqlDatabase.jdbcDriver
         val user = PostgreSqlDatabase.user
