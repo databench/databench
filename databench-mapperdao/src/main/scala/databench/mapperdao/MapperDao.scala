@@ -44,12 +44,7 @@ abstract class AccountDao
     val entity = AccountEntity
 }
 
-object TestMapperDao extends App {
-    Database.recreateAll
-    (new MapperDao).setUp(100)
-}
-
-class MapperDao extends Bank[Integer] {
+class MapperDaoPostgreSubject extends Bank[Integer] {
 
     import PostgreSqlDatabase._
 
@@ -63,13 +58,10 @@ class MapperDao extends Bank[Integer] {
     def setUp(numberOfAccounts: Integer) = {
         PostgreSqlDatabase.setDatabaseDefaultTransactionIsolation(Connection.TRANSACTION_REPEATABLE_READ)
         createTable
-        val ids = try withTransaction {
+        val ids = withTransaction {
             for (i <- 0 until numberOfAccounts) yield {
                 accountDao.create(new Account(i, 0, "")).id
             }
-        } catch {
-            case e: BatchUpdateException =>
-                throw e.getNextException
         }
         ids.map(new Integer(_)).toArray
     }

@@ -37,12 +37,16 @@ trait JdbcDatabase extends Database {
     lazy val user = rootUser
     lazy val password = rootPassword
     lazy val url = rootUrl + "/" + databaseName
-
-    def getConnection =
+    
+    def getConnection = {
+        loadDriver
         DriverManager.getConnection(url, rootUser, rootPassword)
+    }
 
-    private def getRootConnection =
+    private def getRootConnection = {
+        loadDriver
         DriverManager.getConnection(rootUrl, rootUser, rootPassword)
+    }
 
     def loadDriver =
         Class.forName(jdbcDriver)
