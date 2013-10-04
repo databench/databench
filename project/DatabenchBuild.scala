@@ -16,7 +16,7 @@ object DatabenchBuild extends Build {
     	)
 
     val postgresql = "postgresql" % "postgresql" % "9.1-901.jdbc4"
-    val mongoDriver = "org.mongodb" % "mongo-java-driver" % "2.10.0"
+    val mongoDriver = "org.mongodb" % "mongo-java-driver" % "2.11.3"
     val scalaReflect = "org.scala-lang" % "scala-reflect" % "2.10.0"
     val boneCP = "com.jolbox" % "bonecp" % "0.8.0-rc3"
 
@@ -49,7 +49,7 @@ object DatabenchBuild extends Build {
 		    )
 		)
 
-	val slick = "com.typesafe.slick" %% "slick" % "1.0.0"
+	val slick = "com.typesafe.slick" %% "slick" % "1.0.1"
 
 	lazy val databenchSlick = 
 		Project(
@@ -62,7 +62,7 @@ object DatabenchBuild extends Build {
 		    )
 		)
 
-	val sqltyped = "fi.reaktor" %% "sqltyped" % "0.2.1"
+	val sqltyped = "fi.reaktor" %% "sqltyped" % "0.3.0"
 
 	lazy val databenchSqltyped = 
 		Project(
@@ -99,7 +99,7 @@ object DatabenchBuild extends Build {
 		    )
 		)
 
-  val chronicleCore = "com.higherfrequencytrading" % "chronicle" % "1.7"
+  val chronicleCore = "com.higherfrequencytrading" % "chronicle" % "1.8.2"
   val trove4j = "net.sf.trove4j" % "trove4j" % "3.0.3"
   val junit = "junit" % "junit" % "4.4" % "test"
 
@@ -114,8 +114,8 @@ object DatabenchBuild extends Build {
       )
     )
 
-	val hibernateEntityManager = "org.hibernate" % "hibernate-entitymanager" % "4.1.2"
-	val eclipselink = "org.eclipse.persistence" % "eclipselink" % "2.4.0"
+	val hibernateEntityManager = "org.hibernate" % "hibernate-entitymanager" % "4.2.5.Final"
+	val eclipselink = "org.eclipse.persistence" % "eclipselink" % "2.5.1"
 	val batoo = "org.batoo.jpa" % "batoo-jpa" % "2.0.1.2"
 	val validation = "javax.validation" % "validation-api" % "1.0.0.GA"
 	val catalina = "org.apache.tomcat" % "catalina" % "6.0.14"
@@ -211,9 +211,6 @@ object DatabenchBuild extends Build {
 	val reflections = "org.reflections" % "reflections" % "0.9.8" exclude("javassist", "javassist") exclude("dom4j", "dom4j")
 	val gfork = "org.gfork" % "gfork" % "0.11"
 	val scalaTest = "org.scalatest" %% "scalatest" % "2.0.M5b" % "test"
-	val mysql = "mysql" % "mysql-connector-java" % "5.1.16"
-	val sigar = "org.hyperic" % "sigar" % "1.6.3.82"
-	val sigarDist = "org.hyperic" % "sigar-dist" % "1.6.3.82"
 
 	lazy val databenchRunner =
 		Project(
@@ -226,8 +223,7 @@ object DatabenchBuild extends Build {
 		    			databenchSorm, databenchMapperDao),
 			settings = commonSettings ++ assemblySettings ++ Seq(
 					libraryDependencies ++= Seq(
-						reflections, gfork, scalaTest, mysql, 
-						sigar, sigarDist),
+						reflections, gfork, scalaTest),
 	            	mainClass in assembly := Some("databench.runner.Main"),
 	            	test in assembly := {},
 			        mergeStrategy in assembly <<= (mergeStrategy in assembly) { (old) =>

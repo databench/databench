@@ -16,7 +16,6 @@
  import databench.runner.Reporter
  import databench.runner.TurnSummary
  import scala.concurrent.Future
- import scala.actors.Futures._
 
  class DatabenchSpec extends FlatSpec with ShouldMatchers {
 
