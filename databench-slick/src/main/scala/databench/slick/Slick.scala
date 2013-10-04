@@ -13,9 +13,6 @@ import scala.slick.driver.PostgresDriver.simple._
 import javax.sql.DataSource
 import databench.database.PostgreSqlDatabase
 import Database.threadLocalSession
-import com.jolbox.bonecp.BoneCPConfig
-import com.jolbox.bonecp.BoneCP
-import com.jolbox.bonecp.BoneCPDataSource
 
 case class Account(id: Int, balance: Int, transfers: String) {
     def transferValues =
@@ -31,15 +28,8 @@ object Accounts extends Table[Account]("SLICK_ACCOUNT") {
 
 class SlickPostgreSubject extends Bank[JInt] {
 
-    private val dataSource = {
-        import PostgreSqlDatabase._
-        PostgreSqlDatabase.loadDriver
-        val config = new BoneCPConfig
-        config.setJdbcUrl(url)
-        config.setUsername(user)
-        config.setPassword(password)
-        new BoneCPDataSource(config)
-    }
+    private val dataSource = 
+        PostgreSqlDatabase.defaultBoneCPDataSource
 
     private val database =
         Database.forDataSource(dataSource)

@@ -15,8 +15,6 @@ import org.squeryl.Session
 import org.squeryl.SessionFactory
 import scala.collection.JavaConversions._
 import databench.database.PostgreSqlDatabase
-import com.jolbox.bonecp.BoneCP
-import com.jolbox.bonecp.BoneCPConfig
 import org.squeryl.adapters.PostgreSqlAdapter
 import org.squeryl.Optimistic
 import java.sql.Connection
@@ -56,16 +54,8 @@ object SquerylBankSchema extends Schema {
 class SquerylPostgreSubject
         extends Bank[Integer] {
 
-    private val connectionPool = {
-        import PostgreSqlDatabase._
-        Class.forName(jdbcDriver)
-        val config = new BoneCPConfig
-        config.setJdbcUrl(url)
-        config.setUsername(user)
-        config.setPassword(password)
-        config.setLazyInit(true)
-        new BoneCP(config)
-    }
+    private val connectionPool =
+        PostgreSqlDatabase.defaultBoneCP
 
     def setUp(numberOfAccounts: Integer) = {
         prepareSessionFactory

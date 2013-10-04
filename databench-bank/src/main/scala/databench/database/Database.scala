@@ -7,10 +7,14 @@ import scala.reflect.io.Directory
 import java.io.File
 import java.sql.Connection
 import javax.naming.InitialContext
+import com.jolbox.bonecp.BoneCPConfig
+import com.jolbox.bonecp.BoneCPDataSource
+import com.jolbox.bonecp.BoneCP
 
 trait Database {
     def recreate: Unit
     def processName: Option[String]
+    val defaultPoolSize = 100
 }
 
 object Database {
@@ -84,6 +88,27 @@ object PostgreSqlDatabase extends JdbcDatabase {
     override protected val urlPrefix = "jdbc:postgresql"
 
     def processName = Some("postgres")
+
+    def defaultBoneCP = 
+        new BoneCP(defaultBoceCPConfig)
+    
+    def defaultBoneCPDataSource = 
+        new BoneCPDataSource(defaultBoceCPConfig)
+    
+    def defaultBoceCPConfig = {
+        Class.forName(jdbcDriver)
+        val config = new BoneCPConfig
+        config.setJdbcUrl(url)
+        config.setUsername(user)
+        config.setPassword(password)
+        config.setLazyInit(true)
+        config.setDisableConnectionTracking(true)
+        config.setReleaseHelperThreads(0)
+        val partitions = Runtime.getRuntime.availableProcessors
+        config.setPartitionCount(partitions)
+        config.setMaxConnectionsPerPartition(defaultPoolSize / partitions)
+        config
+    }
 
     override protected def prepareDropDatabaseCommand = {
         "SELECT" +

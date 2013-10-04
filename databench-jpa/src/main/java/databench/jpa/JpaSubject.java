@@ -2,8 +2,11 @@ package databench.jpa;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Map;
+import java.util.HashMap;
 
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
@@ -120,8 +123,6 @@ public abstract class JpaSubject implements Bank<Integer> {
 
 	protected abstract JpaAccount newAccount(Integer id);
 
-	protected abstract Map<String, String> getEntityManagerFactoryProperties();
-
 	protected abstract String getPersistenceUnitName();
 
 	protected abstract JpaAccount accountById(final Integer id, EntityManager em);
@@ -151,9 +152,21 @@ public abstract class JpaSubject implements Bank<Integer> {
 
 	protected EntityManagerFactory createEntityManagerFactory()
 			throws SQLException {
-		PostgreSqlDatabase.loadDriver();
+		registerDS();
 		return Persistence.createEntityManagerFactory(getPersistenceUnitName(),
-				getEntityManagerFactoryProperties());
+				new HashMap<String, String>());
+	}
+
+	protected void registerDS() {
+		try {
+			System.setProperty(Context.INITIAL_CONTEXT_FACTORY,
+					"org.apache.naming.java.javaURLContextFactory");
+			System.setProperty(Context.URL_PKG_PREFIXES, "org.apache.naming");
+			(new InitialContext()).bind("PostgreDS",
+					PostgreSqlDatabase.defaultBoneCPDataSource());
+		} catch (NamingException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 }

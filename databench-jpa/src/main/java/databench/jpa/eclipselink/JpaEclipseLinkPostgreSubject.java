@@ -1,9 +1,12 @@
 package databench.jpa.eclipselink;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.HashMap;
-import java.util.Map;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 
 import databench.database.PostgreSqlDatabase;
 import databench.jpa.JpaAccount;
@@ -23,18 +26,30 @@ public class JpaEclipseLinkPostgreSubject extends JpaSubject {
 			EntityManager em) {
 		return em.find(JpaEclipseLinkAccount.class, id);
 	}
-
+	
 	@Override
-	protected Map<String, String> getEntityManagerFactoryProperties() {
-		Map<String, String> properties = new HashMap<String, String>();
-		properties.put("javax.persistence.jdbc.driver",
-				PostgreSqlDatabase.jdbcDriver());
-		properties
-				.put("javax.persistence.jdbc.user", PostgreSqlDatabase.user());
-		properties.put("javax.persistence.jdbc.password",
-				PostgreSqlDatabase.password());
-		properties.put("javax.persistence.jdbc.url", PostgreSqlDatabase.url());
-		return properties;
+	protected EntityManagerFactory createEntityManagerFactory()
+			throws SQLException {
+		createTable();
+		registerDS();
+		HashMap<String, String> properties = new HashMap<String, String>();
+		properties.put("eclipselink.ddl-generation", "create-tables");
+		return Persistence.createEntityManagerFactory(getPersistenceUnitName(),
+				properties);
+	}
+	
+	public void createTable() throws SQLException {
+		Connection conn = PostgreSqlDatabase.getConnection();
+		try {
+			conn.createStatement().execute(
+					"CREATE TABLE IF NOT EXISTS JPAECLIPSELINKACCOUNT ("
+							+ "    ID INTEGER PRIMARY KEY, "
+							+ "    BALANCE INTEGER, "
+							+ "    TRANSFERVALUES BYTEA, "
+							+ "    VERSION INTEGER" + ")");
+		} finally {
+			conn.close();
+		}
 	}
 
 	@Override

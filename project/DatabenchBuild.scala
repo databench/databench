@@ -18,6 +18,7 @@ object DatabenchBuild extends Build {
     val postgresql = "postgresql" % "postgresql" % "9.1-901.jdbc4"
     val mongoDriver = "org.mongodb" % "mongo-java-driver" % "2.10.0"
     val scalaReflect = "org.scala-lang" % "scala-reflect" % "2.10.0"
+    val boneCP = "com.jolbox" % "bonecp" % "0.8.0-rc3"
 
     lazy val databenchBank = 
 		Project(
@@ -25,17 +26,16 @@ object DatabenchBuild extends Build {
 			base = file("databench-bank"),
     		settings = commonSettings ++ Seq(
 		      libraryDependencies ++= 
-		    	  Seq(postgresql, mongoDriver, scalaReflect)
+		    	  Seq(postgresql, mongoDriver, scalaReflect, boneCP)
     	  	)
 		)
 
 	val activateVersion = "1.4-SNAPSHOT"
-	val activateCore = "net.fwbrasil" %% "activate-core" % activateVersion
-	val activatePrevayler = "net.fwbrasil" %% "activate-prevayler" % activateVersion exclude("xpp3", "xpp3_min")
-	val activateJdbc = "net.fwbrasil" %% "activate-jdbc" % activateVersion exclude("com.jolbox", "bonecp")
-	val activateMongo = "net.fwbrasil" %% "activate-mongo" % activateVersion
-	val activatePrevalent = "net.fwbrasil" %% "activate-prevalent" % activateVersion
-	val boneCP = "com.jolbox" % "bonecp" % "0.7.1.RELEASE"
+	val activateCore = "net.fwbrasil" %% "activate-core" % activateVersion exclude("org.ow2.asm", "asm")
+	val activatePrevayler = "net.fwbrasil" %% "activate-prevayler" % activateVersion exclude("xpp3", "xpp3_min") exclude("org.ow2.asm", "asm")
+	val activateJdbc = "net.fwbrasil" %% "activate-jdbc" % activateVersion exclude("org.ow2.asm", "asm")
+	val activateMongo = "net.fwbrasil" %% "activate-mongo" % activateVersion exclude("org.ow2.asm", "asm")
+	val activatePrevalent = "net.fwbrasil" %% "activate-prevalent" % activateVersion exclude("org.ow2.asm", "asm")
 
  	lazy val databenchActivate = 
 		Project(
@@ -116,7 +116,7 @@ object DatabenchBuild extends Build {
 
 	val hibernateEntityManager = "org.hibernate" % "hibernate-entitymanager" % "4.1.2"
 	val eclipselink = "org.eclipse.persistence" % "eclipselink" % "2.4.0"
-	val batoo = "org.batoo.jpa" % "batoo-jpa" % "2.0.1.0-RTM"
+	val batoo = "org.batoo.jpa" % "batoo-jpa" % "2.0.1.2"
 	val validation = "javax.validation" % "validation-api" % "1.0.0.GA"
 	val catalina = "org.apache.tomcat" % "catalina" % "6.0.14"
 	
@@ -203,7 +203,7 @@ object DatabenchBuild extends Build {
 			dependencies = Seq(databenchBank),
 			settings = commonSettings ++ Seq(
 		      libraryDependencies ++= 
-		    	  Seq(mapperDao)
+		    	  Seq(mapperDao, boneCP)
 		    )
 		)
 
@@ -220,10 +220,10 @@ object DatabenchBuild extends Build {
 			id = "databench-runner",
 			base = file("databench-runner"),
 			dependencies = Seq(databenchBank, databenchActivate,
-		    			/*databenchSlick,*/ databenchPrevayler, /*databenchJpa,*/
-		    			/*databenchSqueryl, databenchDb4o,*/ databenchEbean, 
-		    			/*databenchSqltyped,*/ databenchJdbc, databenchChronicle),
-		    			//databenchSorm, databenchMapperDao),
+		    			databenchSlick, databenchPrevayler, databenchJpa,
+		    			databenchSqueryl, databenchDb4o, databenchEbean, 
+		    			databenchSqltyped, databenchJdbc, databenchChronicle,
+		    			databenchSorm, databenchMapperDao),
 			settings = commonSettings ++ assemblySettings ++ Seq(
 					libraryDependencies ++= Seq(
 						reflections, gfork, scalaTest, mysql, 

@@ -143,6 +143,7 @@ public class EbeanPostgreSubject implements Bank<Integer> {
 		postgresDb.setUsername(PostgreSqlDatabase.user());
 		postgresDb.setPassword(PostgreSqlDatabase.password());
 		postgresDb.setUrl(PostgreSqlDatabase.url());
+		postgresDb.setMaxConnections(PostgreSqlDatabase.defaultPoolSize());
 		return postgresDb;
 	}
 

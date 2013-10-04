@@ -6,22 +6,11 @@ import databench.AccountStatus
 import sqltyped._
 import scala.slick.session.Database
 import databench.database.PostgreSqlDatabase
-import com.jolbox.bonecp.BoneCPConfig
-import com.jolbox.bonecp.BoneCPDataSource
 
 class SqltypedPostgreSubject extends Bank[JInt] {
 
-    private val dataSource = {
-        import PostgreSqlDatabase._
-        PostgreSqlDatabase.loadDriver
-        val config = new BoneCPConfig
-        config.setJdbcUrl(url)
-        config.setUsername(user)
-        config.setPassword(password)
-        config.setDefaultAutoCommit(true)
-        config.setStatementsCacheSize(10)
-        new BoneCPDataSource(config)
-    }
+    private val dataSource = 
+        PostgreSqlDatabase.defaultBoneCPDataSource
 
     object Tables {}
     object Columns {}

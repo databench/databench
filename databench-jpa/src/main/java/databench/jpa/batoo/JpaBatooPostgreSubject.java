@@ -2,8 +2,6 @@ package databench.jpa.batoo;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.persistence.EntityManager;
 
@@ -16,7 +14,7 @@ import databench.jpa.JpaSubject;
 public class JpaBatooPostgreSubject extends JpaSubject {
 
 	private static final long serialVersionUID = 1L;
-
+	
 	@Override
 	protected JpaAccount newAccount(Integer id) {
 		return new JpaBatooAccount(id);
@@ -56,18 +54,6 @@ public class JpaBatooPostgreSubject extends JpaSubject {
 		}
 	}
 
-	@Override
-	protected Map<String, String> getEntityManagerFactoryProperties() {
-		Map<String, String> properties = new HashMap<String, String>();
-		properties.put("javax.persistence.jdbc.driver",
-				PostgreSqlDatabase.jdbcDriver());
-		properties
-				.put("javax.persistence.jdbc.user", PostgreSqlDatabase.user());
-		properties.put("javax.persistence.jdbc.password",
-				PostgreSqlDatabase.password());
-		properties.put("javax.persistence.jdbc.url", PostgreSqlDatabase.url());
-		return properties;
-	}
 
 	@Override
 	protected String getPersistenceUnitName() {

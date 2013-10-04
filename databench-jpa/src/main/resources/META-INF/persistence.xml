@@ -4,6 +4,7 @@
         version="2.0">
     <persistence-unit name="databench.jpa.batoo">
     	<provider>org.batoo.jpa.core.BatooPersistenceProvider</provider>
+    	<jta-data-source>PostgreDS</jta-data-source>
     	<class>databench.jpa.batoo.JpaBatooAccount</class>
     	<properties>
         </properties>
@@ -21,12 +22,12 @@
             <property name="hibernate.connection.datasource" value="PostgreDS"/>
         </properties>
     </persistence-unit>
-    <persistence-unit name="databench.jpa.eclipselink">
+    <persistence-unit name="databench.jpa.eclipselink" transaction-type="RESOURCE_LOCAL">
     	<provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+    	<non-jta-data-source>PostgreDS</non-jta-data-source>
     	<class>databench.jpa.eclipselink.JpaEclipseLinkAccount</class>
     	<exclude-unlisted-classes>true</exclude-unlisted-classes>
     	<properties>
-    		<property name="eclipselink.ddl-generation" value="create-tables"/>
         </properties>
     </persistence-unit>
 </persistence>

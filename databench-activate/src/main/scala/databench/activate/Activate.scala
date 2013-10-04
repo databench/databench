@@ -119,6 +119,7 @@ class ActivateMongoSubject
         override val host = MongoDatabase.host
         override val port = MongoDatabase.port
         override val db = MongoDatabase.db
+        override val poolSize = MongoDatabase.defaultPoolSize
     }
 
 }
@@ -127,11 +128,12 @@ class ActivatePostgreSubject
         extends ActivateSubject {
     
     val storage = new PooledJdbcRelationalStorage {
-        val jdbcDriver = PostgreSqlDatabase.jdbcDriver
-        val user = PostgreSqlDatabase.user
-        val password = PostgreSqlDatabase.password
-        val url = PostgreSqlDatabase.url
-        val dialect = postgresqlDialect
+        override val jdbcDriver = PostgreSqlDatabase.jdbcDriver
+        override val user = PostgreSqlDatabase.user
+        override val password = PostgreSqlDatabase.password
+        override val url = PostgreSqlDatabase.url
+        override val dialect = postgresqlDialect
+        override val poolSize = PostgreSqlDatabase.defaultPoolSize 
         override val batchLimit = 0
     }
 
