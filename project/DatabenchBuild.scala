@@ -181,7 +181,7 @@ object DatabenchBuild extends Build {
 		    )
 		)
 
-	val sorm = "org.sorm-framework" % "sorm" % "0.3.8"
+	val sorm = "org.sorm-framework" % "sorm" % "0.3.9-SNAPSHOT"
 
 	lazy val databenchSorm = 
 		Project(
@@ -242,6 +242,7 @@ object DatabenchBuild extends Build {
 	val jbossRepoThirdParty = "jbossRepoThirdParty" at "https://repository.jboss.org/nexus/content/repositories/thirdparty-releases"
 	val localMaven = "Local Maven Repository" at "file://"+Path.userHome+"/.m2/repository"
 	val eclipselinkRepo = "eclipselink" at "http://download.eclipse.org/rt/eclipselink/maven.repo"
+	val sonatypeSnapshots = "sonatype-snapshots" at "https://oss.sonatype.org/content/repositories/snapshots/"
 
 	def commonSettings = 
     	Defaults.defaultSettings ++ net.virtualvoid.sbt.graph.Plugin.graphSettings ++ Seq(
@@ -249,7 +250,7 @@ object DatabenchBuild extends Build {
     		version := "1.0-SNAPSHOT",
     		scalaVersion := "2.10.0",
     		javacOptions ++= Seq("-source", "1.5", "-target", "1.5"),
-    	    resolvers ++= Seq(fwbrasilRepo, jbossRepo, jbossRepoThirdParty, localMaven, eclipselinkRepo),
+    	    resolvers ++= Seq(fwbrasilRepo, jbossRepo, jbossRepoThirdParty, localMaven, eclipselinkRepo, sonatypeSnapshots),
     	    compileOrder := CompileOrder.ScalaThenJava,
     	    parallelExecution in Test := false
     	)
