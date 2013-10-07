@@ -17,7 +17,7 @@ object DatabenchBuild extends Build {
 
     val postgresql = "postgresql" % "postgresql" % "9.1-901.jdbc4"
     val mongoDriver = "org.mongodb" % "mongo-java-driver" % "2.11.3"
-    val scalaReflect = "org.scala-lang" % "scala-reflect" % "2.10.0"
+    val scalaCompiler = "org.scala-lang" % "scala-compiler" % "2.10.2"
     val boneCP = "com.jolbox" % "bonecp" % "0.8.0-rc3"
 
     lazy val databenchBank = 
@@ -26,7 +26,7 @@ object DatabenchBuild extends Build {
 			base = file("databench-bank"),
     		settings = commonSettings ++ Seq(
 		      libraryDependencies ++= 
-		    	  Seq(postgresql, mongoDriver, scalaReflect, boneCP)
+		    	  Seq(postgresql, mongoDriver, scalaCompiler, boneCP)
     	  	)
 		)
 
@@ -248,7 +248,7 @@ object DatabenchBuild extends Build {
     	Defaults.defaultSettings ++ net.virtualvoid.sbt.graph.Plugin.graphSettings ++ Seq(
     		organization := "databench",
     		version := "1.0-SNAPSHOT",
-    		scalaVersion := "2.10.0",
+    		scalaVersion := "2.10.2",
     		javacOptions ++= Seq("-source", "1.5", "-target", "1.5"),
     	    resolvers ++= Seq(fwbrasilRepo, jbossRepo, jbossRepoThirdParty, localMaven, eclipselinkRepo, sonatypeSnapshots),
     	    compileOrder := CompileOrder.ScalaThenJava,

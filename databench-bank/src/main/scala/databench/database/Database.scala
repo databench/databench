@@ -3,13 +3,13 @@ package databench.database
 import databench.properties
 import java.sql.DriverManager
 import com.mongodb.MongoClient
-import scala.reflect.io.Directory
 import java.io.File
 import java.sql.Connection
 import javax.naming.InitialContext
 import com.jolbox.bonecp.BoneCPConfig
 import com.jolbox.bonecp.BoneCPDataSource
 import com.jolbox.bonecp.BoneCP
+import java.io.FileNotFoundException
 
 trait Database {
     def recreate: Unit
@@ -37,7 +37,7 @@ trait JdbcDatabase extends Database {
     lazy val user = rootUser
     lazy val password = rootPassword
     lazy val url = rootUrl + "/" + databaseName
-    
+
     def getConnection = {
         loadDriver
         DriverManager.getConnection(url, rootUser, rootPassword)
@@ -93,12 +93,12 @@ object PostgreSqlDatabase extends JdbcDatabase {
 
     def processName = Some("postgres")
 
-    def defaultBoneCP = 
+    def defaultBoneCP =
         new BoneCP(defaultBoceCPConfig)
-    
-    def defaultBoneCPDataSource = 
+
+    def defaultBoneCPDataSource =
         new BoneCPDataSource(defaultBoceCPConfig)
-    
+
     def defaultBoceCPConfig = {
         Class.forName(jdbcDriver)
         val config = new BoneCPConfig
@@ -155,9 +155,17 @@ object FolderDatabase extends Database {
     def processName = None
 
     override def recreate = {
-        Directory(folder).deleteRecursively
+        delete(folder)
         folder.mkdir
     }
+
+    private def delete(file: File): Unit = 
+        if (file.isDirectory()) {
+            for (c <- file.listFiles)
+                delete(c)
+            !folder.delete()
+        } else
+            file.delete
 
     def path =
         folder.getPath
