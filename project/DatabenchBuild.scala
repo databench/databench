@@ -30,7 +30,7 @@ object DatabenchBuild extends Build {
     	  	)
 		)
 
-	val activateVersion = "1.4-SNAPSHOT"
+	val activateVersion = "1.4.4"
 	val activateCore = "net.fwbrasil" %% "activate-core" % activateVersion exclude("org.ow2.asm", "asm")
 	val activatePrevayler = "net.fwbrasil" %% "activate-prevayler" % activateVersion exclude("xpp3", "xpp3_min") exclude("org.ow2.asm", "asm")
 	val activateJdbc = "net.fwbrasil" %% "activate-jdbc" % activateVersion exclude("org.ow2.asm", "asm")
@@ -181,7 +181,7 @@ object DatabenchBuild extends Build {
 		    )
 		)
 
-	val sorm = "org.sorm-framework" % "sorm" % "0.3.9-SNAPSHOT"
+	val sorm = "org.sorm-framework" % "sorm" % "0.3.9"
 
 	lazy val databenchSorm = 
 		Project(
