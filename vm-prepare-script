@@ -1,6 +1,6 @@
-sudo add-apt-repository ppa:pitti/postgresql 
+sudo echo "deb http://apt.postgresql.org/pub/repos/apt/ squeeze-pgdg main" > /etc/apt/sources.list.d/pgdg.list
 sudo apt-get update
-sudo apt-get -y install postgresql-9.2
+sudo apt-get --force-yes install postgresql-9.2
 sudo apt-get -y install mongodb
 sudo apt-get -y install openjdk-6-jdk
 sudo apt-get -y install git
@@ -14,9 +14,6 @@ sudo passwd postgres
 
 sudo -c postgres psql -c "ALTER USER postgres WITH PASSWORD 'postgres'" -d template1
 sudo -u postgres createdb -O postgres databenchdev
-
-git clone git://github.com/databench/databench.git
-
 sudo -u postgres psql databenchdev < databench/databench-sqltyped/src/main/resources/schema.sql
 
 cd databench
@@ -29,5 +26,16 @@ sudo mkdir databench
 sudo chmod 777 databench
 cd databench
 
+sudo sysctl -w kernel.shmmax=17179869184
+sudo sysctl -w kernel.shmall=4194304
+
+sudo nano /etc/postgresql/9.2/main/postgresql.conf
+max_connections = 1000
+
+sudo /etc/init.d/postgresql restart
+
 nohup sudo java -Xmx10000M -jar ~/databench/databench-runner/target/databench-runner-assembly-1.0-SNAPSHOT.jar &
 tail -f nohup.out
+
+
+nohup sudo java -Dfilter=jdbc -DthreadsStart=30 -Xmx10000M -jar ~/databench/databench-runner/target/databench-runner-assembly-1.0-SNAPSHOT.jar &
